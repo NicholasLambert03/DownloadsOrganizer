@@ -18,9 +18,12 @@ for file_name in downloaded_files:
     try:
         file_path = os.path.join(download_path,file_name)
         mime_type, encoding = mimetypes.guess_type(file_path)
-        folder_name =  mime_type.split('/')[0]
-        folder_path = os.path.join(download_path,
-                                folder_name.capitalize()+"s")
+        try:
+            folder_name =  mime_type.split('/')[0].capitalize()+"s"
+        except AttributeError as e:
+            print(f"Unrecognised file type for {file_name}, moved into Misc")
+            folder_name = "Misc" #Handles Unrecognised File Type
+        folder_path = os.path.join(download_path,folder_name)
         os.makedirs(folder_path,exist_ok=True)
         shutil.move(file_path,os.path.join(folder_path,file_name))
         successes +=1
