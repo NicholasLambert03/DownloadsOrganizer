@@ -51,8 +51,16 @@ class FileSorter():
                 folder_name = "Misc" #Handles Unrecognised File Type
             folder_path = os.path.join(dir_path,folder_name)
             os.makedirs(folder_path,exist_ok=True)
-            shutil.move(file_path,os.path.join(folder_path,file_name))
-            print(f"{file_name} successfully moved to /{folder_name}")
+            destination = os.path.join(folder_path,file_name)
+            num=0 #Prevents overwriting of files with same name
+            while(os.path.exists(destination)):
+                num+=1
+                destination = os.path.join(folder_path,file_name+f"[{num}]")
+            shutil.move(file_path,destination)
+            if num ==0:
+                print(f"{file_name} successfully moved to /{folder_name}")
+            else:
+                print(f"{file_name} (renamed to {file_name}[{num}] due to pre-existing file in directory) successfully moved to /{folder_name}")
 
         except Exception as e:
             print(f"Error moving file {file_name}: {e}")
